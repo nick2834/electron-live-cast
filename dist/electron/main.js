@@ -2548,41 +2548,63 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* WEBPACK VAR INJECTION */(function(__dirname) {/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_electron__ = __webpack_require__(2);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_electron___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_electron__);
 
+
 if (process.env.NODE_ENV !== 'development') {
   global.__static = __webpack_require__(0).join(__dirname, '/static').replace(/\\/g, '\\\\');
 }
 
-let mainWindow;
-const winURL = process.env.NODE_ENV === 'development' ? `http://localhost:9080` : `file://${__dirname}/index.html`;
+let loginWindow, mainWindow;
+const loginUrl = process.env.NODE_ENV === 'development' ? `http://localhost:9080` : `file://${__dirname}/index.html`;
 
-function createWindow() {
-  /**
-   * Initial window options
-   */
-  mainWindow = new __WEBPACK_IMPORTED_MODULE_0_electron__["BrowserWindow"]({
+const mainURL = process.env.NODE_ENV === 'development' ? `http://localhost:9080/#/main` : `file://${__dirname}/index.html#main`;
+
+function createLogin() {
+  loginWindow = new __WEBPACK_IMPORTED_MODULE_0_electron__["BrowserWindow"]({
     height: 330,
     useContentSize: true,
     width: 429,
-    frame: false,
+    // frame: false,
     resizable: false,
     skipTaskbar: false,
     transparent: true,
     title: "实时音视频",
     autoHideMenuBar: true,
     show: true,
-    // alwaysOnTop: true,
     hasShadow: true,
     center: true
   });
 
-  mainWindow.loadURL(winURL);
+  loginWindow.loadURL(loginUrl);
+
+  loginWindow.on('closed', () => {
+    loginWindow = null;
+  });
+}
+
+function createMain() {
+  mainWindow = new __WEBPACK_IMPORTED_MODULE_0_electron__["BrowserWindow"]({
+    height: 650,
+    useContentSize: true,
+    width: 980,
+    show: false,
+    titleBarStyle: 'hidden',
+    resizable: false
+  });
+  mainWindow.loadURL(mainURL);
 
   mainWindow.on('closed', () => {
     mainWindow = null;
   });
 }
-
-__WEBPACK_IMPORTED_MODULE_0_electron__["app"].on('ready', createWindow);
+__WEBPACK_IMPORTED_MODULE_0_electron__["app"].on('ready', () => {
+  const {
+    width,
+    height
+  } = __WEBPACK_IMPORTED_MODULE_0_electron__["screen"].getPrimaryDisplay().workAreaSize;
+  createLogin();
+  // main(width, height)
+  createMain();
+});
 
 __WEBPACK_IMPORTED_MODULE_0_electron__["app"].on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
@@ -2591,33 +2613,34 @@ __WEBPACK_IMPORTED_MODULE_0_electron__["app"].on('window-all-closed', () => {
 });
 
 __WEBPACK_IMPORTED_MODULE_0_electron__["app"].on('activate', () => {
-  if (mainWindow === null) {
-    createWindow();
+  if (loginWindow === null && mainWindow == null) {
+    createLogin();
+    createMain();
   }
 });
-__WEBPACK_IMPORTED_MODULE_0_electron__["ipcMain"].on('open-window', e => {
-  const {
-    width,
-    height
-  } = __WEBPACK_IMPORTED_MODULE_0_electron__["screen"].getPrimaryDisplay().workAreaSize;
-  mainWindow.setSize(width, height);
-  //   mainWindow.setFullScreen(true)
+__WEBPACK_IMPORTED_MODULE_0_electron__["ipcMain"].on('main-window', (event, data) => {
+  console.log(data);
+  loginWindow.close();
+  mainWindow.show();
+  mainWindow.webContents.send('query', data);
 });
-__WEBPACK_IMPORTED_MODULE_0_electron__["ipcMain"].on('win-fullscreen', e => {
-  mainWindow.setFullScreen(true);
+__WEBPACK_IMPORTED_MODULE_0_electron__["ipcMain"].on('status', (evt, data) => {
+  console.log(data);
+  if (data) {
+    loginWindow.close();
+    mainWindow.show();
+  } else {
+    __WEBPACK_IMPORTED_MODULE_0_electron__["app"].quit();
+  }
 });
-__WEBPACK_IMPORTED_MODULE_0_electron__["ipcMain"].on('back-Login', e => {
-  mainWindow.setFullScreen(false);
-  mainWindow.setSize(429, 330);
-});
-__WEBPACK_IMPORTED_MODULE_0_electron__["ipcMain"].on('close', e => {
-  mainWindow.close();
-});
-__WEBPACK_IMPORTED_MODULE_0_electron__["ipcMain"].on('win-minimize', e => {
-  //   console.log(e)
-  //   mainWindow.setFullScreen(false)
-  mainWindow.minimize();
-});
+// ipcMain.on('open-window', e => {
+//   const {
+//     width,
+//     height
+//   } = screen.getPrimaryDisplay().workAreaSize
+//   mainWindow.setSize(width, height)
+//   //   mainWindow.setFullScreen(true)
+// })
 /* WEBPACK VAR INJECTION */}.call(__webpack_exports__, "src/main"))
 
 /***/ }),

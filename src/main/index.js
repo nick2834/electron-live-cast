@@ -3,45 +3,69 @@ import {
   BrowserWindow,
   ipcMain,
   screen,
-  
+
 } from 'electron'
+
 if (process.env.NODE_ENV !== 'development') {
   global.__static = require('path').join(__dirname, '/static').replace(/\\/g, '\\\\')
 }
 
-let mainWindow
-const winURL = process.env.NODE_ENV === 'development' ?
+let loginWindow, mainWindow
+const loginUrl = process.env.NODE_ENV === 'development' ?
   `http://localhost:9080` :
-  `file://${__dirname}/index.html`
+  `file://${__dirname}/index.html`;
 
-function createWindow() {
-  /**
-   * Initial window options
-   */
-  mainWindow = new BrowserWindow({
+const mainURL = process.env.NODE_ENV === 'development' ?
+  `http://localhost:9080/#/main` :
+  `file://${__dirname}/index.html#main`;
+
+function createLogin() {
+  loginWindow = new BrowserWindow({
     height: 330,
     useContentSize: true,
     width: 429,
-    frame: false,
+    // frame: false,
     resizable: false,
     skipTaskbar: false,
     transparent: true,
     title: "实时音视频",
     autoHideMenuBar: true,
     show: true,
-    // alwaysOnTop: true,
     hasShadow: true,
     center: true
   });
 
-  mainWindow.loadURL(winURL)
+  loginWindow.loadURL(loginUrl)
+
+  loginWindow.on('closed', () => {
+    loginWindow = null
+  })
+}
+
+function createMain() {
+  mainWindow = new BrowserWindow({
+    height: 650,
+    useContentSize: true,
+    width: 980,
+    show: false,
+    titleBarStyle: 'hidden',
+    resizable: false
+  })
+  mainWindow.loadURL(mainURL);
 
   mainWindow.on('closed', () => {
     mainWindow = null
   })
 }
-
-app.on('ready', createWindow)
+app.on('ready', () => {
+  const {
+    width,
+    height
+  } = screen.getPrimaryDisplay().workAreaSize
+  createLogin()
+  // main(width, height)
+  createMain()
+})
 
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
@@ -50,30 +74,31 @@ app.on('window-all-closed', () => {
 })
 
 app.on('activate', () => {
-  if (mainWindow === null) {
-    createWindow()
+  if (loginWindow === null && mainWindow == null) {
+    createLogin()
+    createMain()
   }
 })
-ipcMain.on('open-window', e => {
-  const {
-    width,
-    height
-  } = screen.getPrimaryDisplay().workAreaSize
-  mainWindow.setSize(width, height)
-  //   mainWindow.setFullScreen(true)
+ipcMain.on('main-window',(event,data) =>{
+  console.log(data)
+  loginWindow.close()
+  mainWindow.show()
+  mainWindow.webContents.send('query', data)
 })
-ipcMain.on('win-fullscreen', e => {
-  mainWindow.setFullScreen(true)
-})
-ipcMain.on('back-Login', e => {
-  mainWindow.setFullScreen(false)
-  mainWindow.setSize(429, 330)
-})
-ipcMain.on('close', e => {
-  mainWindow.close()
-})
-ipcMain.on('win-minimize', e => {
-  //   console.log(e)
-  //   mainWindow.setFullScreen(false)
-  mainWindow.minimize()
-})
+ipcMain.on('status', (evt, data) => {
+  console.log(data)
+  if (data) {
+    loginWindow.close()
+    mainWindow.show()
+  } else {
+    app.quit()
+  }
+});
+// ipcMain.on('open-window', e => {
+//   const {
+//     width,
+//     height
+//   } = screen.getPrimaryDisplay().workAreaSize
+//   mainWindow.setSize(width, height)
+//   //   mainWindow.setFullScreen(true)
+// })

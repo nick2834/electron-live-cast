@@ -138,14 +138,22 @@ export default {
         courseName: target.addr,
         userID: target.id
       };
-      this.$router.push({
-        name: "main",
-        query: query
-      }); //路由跳转mainChat
+      // this.$router.push({
+      //   name: "main",
+      //   query: query
+      // }); //路由跳转mainChat
       const ipcRenderer = require("electron").ipcRenderer;
-      _this.$nextTick(() => {
-        ipcRenderer.send("open-window");
-      });
+      ipcRenderer.send("main-window", query);
+    },
+    checkLogin() {
+      var _this = this;
+      var USERINFO = sessionStorage.getItem("user");
+      if (USERINFO) {
+        _this.isLogined = true;
+        if (_this.isLogined) {
+          _this.getRoomList(JSON.parse(USERINFO).username);
+        }
+      }
     }
   },
   mounted() {
@@ -157,6 +165,9 @@ export default {
         _this.getRoomList(JSON.parse(USERINFO).username);
       }
     }
+  },
+  created() {
+    this.checkLogin();
   }
 };
 </script>
