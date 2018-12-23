@@ -5,14 +5,17 @@
 #### Build Setup
 
 ``` bash
-# install dependencies
-npm install
+git clone https://github.com/nick2834/electron-live-cast
 
-# serve with hot reload at localhost:9080
-npm run dev
+cd electron-live-cast
 
-# build electron application for production
-npm run build
+yarn
+
+# 运行开发模式
+yarn run dev
+
+# 打包安装文件 
+yarn run build
 
 
 ```
