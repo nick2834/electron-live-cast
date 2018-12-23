@@ -1,0 +1,49 @@
+{
+	"name": "electron-store",
+	"version": "2.0.0",
+	"description": "Simple data persistence for your Electron app or module - Save and load user preferences, app state, cache, etc",
+	"license": "MIT",
+	"repository": "sindresorhus/electron-store",
+	"author": {
+		"name": "Sindre Sorhus",
+		"email": "sindresorhus@gmail.com",
+		"url": "sindresorhus.com"
+	},
+	"scripts": {
+		"test": "xo && ava"
+	},
+	"files": [
+		"index.js"
+	],
+	"keywords": [
+		"electron",
+		"store",
+		"app",
+		"config",
+		"storage",
+		"conf",
+		"configuration",
+		"settings",
+		"preferences",
+		"json",
+		"data",
+		"persist",
+		"persistent",
+		"save"
+	],
+	"dependencies": {
+		"conf": "^2.0.0"
+	},
+	"devDependencies": {
+		"ava": "*",
+		"electron": "^2.0.2",
+		"execa": "^0.10.0",
+		"xo": "*"
+	},
+	"xo": {
+		"envs": [
+			"node",
+			"browser"
+		]
+	}
+}

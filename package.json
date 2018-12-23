@@ -63,9 +63,11 @@
     "vue-electron": "^1.0.6",
     "vue-router": "^2.5.3",
     "vue2-toast": "^2.0.2",
-    "vuex": "^2.3.1"
+    "vuex": "^2.3.1",
+    "vuex-electron": "^1.0.2"
   },
   "devDependencies": {
+    "axios-mock-adapter": "^1.15.0",
     "babel-core": "^6.25.0",
     "babel-loader": "^7.1.1",
     "babel-plugin-transform-runtime": "^6.23.0",
