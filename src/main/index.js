@@ -1,70 +1,70 @@
 import {
   app,
   BrowserWindow,
-  ipcMain,
-  screen,
-
+  ipcMain
 } from 'electron'
-
 if (process.env.NODE_ENV !== 'development') {
   global.__static = require('path').join(__dirname, '/static').replace(/\\/g, '\\\\')
 }
 
-let loginWindow, mainWindow
-const loginUrl = process.env.NODE_ENV === 'development' ?
+let mainWindow, roomWindow
+const winURL = process.env.NODE_ENV === 'development' ?
   `http://localhost:9080` :
-  `file://${__dirname}/index.html`;
+  `file://${__dirname}/index.html`
 
-const mainURL = process.env.NODE_ENV === 'development' ?
-  `http://localhost:9080/#/main` :
-  `file://${__dirname}/index.html#main`;
+const roomURL = process.env.NODE_ENV === 'development' ?
+  `http://localhost:9080/#room` :
+  `file://${__dirname}/index.html#room`
 
-function createLogin() {
-  loginWindow = new BrowserWindow({
-    height: 330,
-    useContentSize: true,
-    width: 429,
-    // frame: false,
-    resizable: false,
-    skipTaskbar: false,
-    transparent: true,
-    title: "实时音视频",
-    autoHideMenuBar: true,
-    show: true,
-    hasShadow: true,
-    center: true
-  });
-
-  loginWindow.loadURL(loginUrl)
-
-  loginWindow.on('closed', () => {
-    loginWindow = null
-  })
-}
-
-function createMain() {
+function createWindow() {
   mainWindow = new BrowserWindow({
-    height: 650,
+    height: 500,
     useContentSize: true,
-    width: 980,
-    show: false,
+    width: 350,
+    show: true,
     titleBarStyle: 'hidden',
-    resizable: false
+    resizable: false,
+    webPreferences: {
+      webSecurity: false
+    }
   })
-  mainWindow.loadURL(mainURL);
+
+  mainWindow.loadURL(winURL)
 
   mainWindow.on('closed', () => {
     mainWindow = null
   })
 }
+
+function createRoom() {
+  roomWindow = new BrowserWindow({
+    height: 650,
+    useContentSize: true,
+    width: 980,
+    frame: false,
+    resizable: false,
+    skipTaskbar: false,
+    transparent: true,
+    title: "实时音视频",
+    autoHideMenuBar: true,
+    show: false,
+    // alwaysOnTop: true,
+    hasShadow: true,
+    center: true,
+    webPreferences: {
+      webSecurity: false
+    }
+  })
+  roomWindow.loadURL(roomURL)
+
+  roomWindow.on('closed', () => {
+    roomWindow = null
+  })
+}
+
 app.on('ready', () => {
-  const {
-    width,
-    height
-  } = screen.getPrimaryDisplay().workAreaSize
-  createLogin()
-  // main(width, height)
-  createMain()
+  createWindow()
+  createRoom()
 })
 
 app.on('window-all-closed', () => {
@@ -74,31 +74,45 @@ app.on('window-all-closed', () => {
 })
 
 app.on('activate', () => {
-  if (loginWindow === null && mainWindow == null) {
-    createLogin()
-    createMain()
+  if (mainWindow === null && roomWindow === null) {
+    createWindow()
+    createRoom()
+  }
+
+})
+
+ipcMain.on('checkUsers',(e,user) =>{
+  if(user){
+
+  }else{
+    roomWindow.close()
+    mainWindow.show()
   }
 })
-ipcMain.on('main-window',(event,data) =>{
-  console.log(data)
-  loginWindow.close()
-  mainWindow.show()
-  mainWindow.webContents.send('query', data)
-})
+
+ipcMain.on('roomList', (evt, data) => {
+  mainWindow.close()
+  roomWindow.show()
+  roomWindow.webContents.send('user-access', data)
+});
+
+ipcMain.on('backRoom', (evt, data) => {
+  roomWindow.webContents.send('user-access', data)
+});
 ipcMain.on('status', (evt, data) => {
   console.log(data)
   if (data) {
-    loginWindow.close()
-    mainWindow.show()
+    mainWindow.close()
+    roomWindow.show()
   } else {
     app.quit()
   }
 });
-// ipcMain.on('open-window', e => {
-//   const {
-//     width,
-//     height
-//   } = screen.getPrimaryDisplay().workAreaSize
-//   mainWindow.setSize(width, height)
-//   //   mainWindow.setFullScreen(true)
-// })
+
+ipcMain.on('win-minimize',() =>{
+  roomWindow.minimize()
+})
+
+ipcMain.on('win-close',() =>{
+  app.quit()
+})

@@ -1,56 +1,54 @@
 <template>
-  <div class="main_box">
-    <div class="header-view">
+  <div>
+    <header class="header-view">
       <div class="left flex-c-l">
-        <el-button class="no-drag" size="mini" type="text" @click="logout">
+        <el-button @click="back" class="no-drag" size="mini" type="text">
           <i class="btn el-icon-arrow-left"></i>
         </el-button>
       </div>
-      <div class="center">{{courseName}}</div>
+      <div>{{courseName}}</div>
       <div class="right">
         <el-button @click="minimize" class="no-drag" size="mini" type="text">
           <i class="btn el-icon-minus"></i>
         </el-button>
-        <el-button @click="fullscreen" class="no-drag" size="mini" type="text">
-          <i class="btn courtfont icon-quanping"></i>
-        </el-button>
+        <!-- <el-button @click="maxmize" class="no-drag" size="mini" type="text">
+          <i class="btn el-icon-minus"></i>
+        </el-button> -->
         <el-button @click="close" class="no-drag hover-color" size="mini" type="text">
           <i class="btn el-icon-close"></i>
         </el-button>
       </div>
-    </div>
-    <div class="wrapper">
-      <div class="wrapper-item">
-        <video
-          id="localVideo"
-          style=" margin: 0 auto; width: 100%; height: 100%;"
-          muted
-          autoplay
-          playinline
-        ></video>
-      </div>
-      <template v-if="members.length <= 0">
-        <div class="wrapper-item"></div>
-        <div class="wrapper-item"></div>
-        <div class="wrapper-item"></div>
-      </template>
-      <div class="wrapper-item" v-for="(item, index) in members" :key="index">
-        <video
-          :id="'v_'+(item.id)"
-          style=" margin: 0 auto; width: 100%; height: 100%;"
-          autoplay
-          playsinline
-        ></video>
+    </header>
+    <div class="main_box">
+      <div class="wrapper">
+        <div class="wrapper-item">
+          <video
+            id="localVideo"
+            style=" margin: 0 auto; width: 100%; height: 100%;"
+            muted
+            autoplay
+            playinline
+          ></video>
+        </div>
+        <template v-if="members.length <= 0">
+          <div class="wrapper-item"></div>
+          <div class="wrapper-item"></div>
+          <div class="wrapper-item"></div>
+        </template>
+        <div class="wrapper-item" v-for="(item, index) in members" :key="index">
+          <video
+            :id="'v_'+(item.id)"
+            style=" margin: 0 auto; width: 100%; height: 100%;"
+            autoplay
+            playsinline
+          ></video>
+        </div>
       </div>
     </div>
   </div>
 </template>
 <script>
-import HeaderView from "../../components/Header/";
 export default {
-  components: {
-    HeaderView
-  },
   data() {
     return {
       mainBox: true,
@@ -168,7 +166,7 @@ export default {
   mounted: function() {
     var query = this.$route.query;
     var self = this;
-    self.courseName = query.courseName
+    self.courseName = query.courseName;
     console.log("Main.mounted: ", JSON.stringify(query));
     if (!query) {
       alert("请先登录!");
@@ -571,8 +569,9 @@ export default {
         });
       }
     },
-    goHomeRouter: function() {
+    goHomeRouter() {
       var self = this;
+      var user = JSON.parse(sessionStorage.user) || "null";
       // WebRTCAPI.init({}, {});
       localStorage.removeItem("course_info");
       this.RTC && this.RTC.quit();
@@ -583,15 +582,15 @@ export default {
           self.courseId,
           function(res) {
             self.$router.push({
-              path: "/login"
+              path: "/room"
             });
-            self.ipcRenderer.send("back-Login");
+            self.$electron.ipcRenderer.send("backRoom", user);
           },
           function(res) {
             self.$router.push({
-              path: "/login"
+              path: "/room"
             });
-            self.ipcRenderer.send("back-Login");
+            self.$electron.ipcRenderer.send("backRoom", user);
           }
         );
     },
@@ -608,11 +607,23 @@ export default {
         })
         .catch(() => {});
     },
+    back() {
+      var self = this;
+      self
+        .$confirm("此操作将退出当前房间, 是否继续?", "提示", {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning"
+        })
+        .then(() => {
+          self.goHomeRouter();
+        })
+        .catch(() => {});
+    },
     minimize() {
       this.ipcRenderer.send("win-minimize");
     },
     fullscreen() {
-      console.log(this.$electron);
       this.ipcRenderer.send("win-fullscreen");
     },
     close() {
@@ -625,7 +636,7 @@ export default {
         })
         .then(() => {
           self.goHomeRouter();
-          self.ipcRenderer.send("close");
+          self.ipcRenderer.send("win-close");
         })
         .catch(() => {});
     }
@@ -637,29 +648,24 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-.header-view {
-  -webkit-app-region: drag;
-  height: 50px;
-  position: absolute;
-  width: 100%;
-}
 .main_box {
   background: #efefef;
-  height: 100%;
+  height: calc(100vh - 50px);
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
+  margin-top: 50px;
 }
 .wrapper {
   width: 100%;
   height: calc(100vh - 50px);
   display: flex;
   flex-wrap: wrap;
-  flex-direction: column;
+  flex-direction: row;
   position: absolute;
-  top: 50px;
+  top: 0;
   bottom: 0;
   left: 0;
   right: 0;
