@@ -20,8 +20,8 @@ yarn run build (npm run build)
 
 ### UI
 
-![](https://i.loli.net/2018/07/23/5b55923480eac.png)
-![](https://i.loli.net/2018/07/23/5b5592342f330.png)
-![](https://i.loli.net/2018/07/23/5b559233da730.png)
-![](https://i.loli.net/2018/07/23/5b5592333d294.png)
-![](https://i.loli.net/2018/07/23/5b5592337750c.png)
+![](https://github.com/nick2834/electron-live-cast/blob/master/01.jpg)
+![](https://github.com/nick2834/electron-live-cast/blob/master/02.jpg)
+![](https://github.com/nick2834/electron-live-cast/blob/master/03.jpg)
+![](https://github.com/nick2834/electron-live-cast/blob/master/04.jpg)
+![](https://github.com/nick2834/electron-live-cast/blob/master/05.jpg)
