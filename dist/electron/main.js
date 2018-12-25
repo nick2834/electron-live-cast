@@ -2581,6 +2581,17 @@ function createLoginWindow() {
   loginWindow.on('closed', () => {
     loginWindow = null;
   });
+
+  var template = [{
+    label: "Application",
+    submenu: [{ label: "关于", selector: "orderFrontStandardAboutPanel:" }, { type: "separator" }, { label: "退出", accelerator: "Command+Q", click: function () {
+        __WEBPACK_IMPORTED_MODULE_0_electron__["app"].quit();
+      } }]
+  }, {
+    label: "编辑",
+    submenu: [{ label: "撤回", accelerator: "CmdOrCtrl+Z", selector: "undo:" }, { label: "重做", accelerator: "Shift+CmdOrCtrl+Z", selector: "redo:" }, { type: "separator" }, { label: "剪切", accelerator: "CmdOrCtrl+X", selector: "cut:" }, { label: "复制", accelerator: "CmdOrCtrl+C", selector: "copy:" }, { label: "粘贴", accelerator: "CmdOrCtrl+V", selector: "paste:" }, { label: "全选", accelerator: "CmdOrCtrl+A", selector: "selectAll:" }]
+  }];
+  __WEBPACK_IMPORTED_MODULE_0_electron__["Menu"].setApplicationMenu(__WEBPACK_IMPORTED_MODULE_0_electron__["Menu"].buildFromTemplate(template));
 }
 
 function createRoomWindow() {
