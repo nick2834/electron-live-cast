@@ -7,17 +7,12 @@ export default new Router({
   routes: [{
       path: '/',
       name: 'login',
-      component: require('@/components/login').default
+      component: require('../view/login').default
     },
     {
-      path: '/list',
-      name: 'list',
-      component: require('@/components/list').default,
-    },
-    {
-      path: '/saloon',
-      name: 'saloon',
-      component: require('@/components/saloon').default,
+      path: '/room',
+      name: 'room',
+      component: require('../view/room').default,
     },
     {
       path: '*',

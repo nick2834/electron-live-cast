@@ -1,24 +1,5 @@
 <template>
-  <div>
-    <header class="header-view">
-      <div class="left flex-c-l">
-        <el-button @click="back" class="no-drag" size="mini" type="text">
-          <i class="btn el-icon-arrow-left"></i>
-        </el-button>
-      </div>
-      <div>{{courseName}}</div>
-      <div class="right">
-        <el-button @click="minimize" class="no-drag" size="mini" type="text">
-          <i class="btn el-icon-minus"></i>
-        </el-button>
-        <!-- <el-button @click="maxmize" class="no-drag" size="mini" type="text">
-          <i class="btn el-icon-minus"></i>
-        </el-button>-->
-        <el-button @click="close" class="no-drag hover-color" size="mini" type="text">
-          <i class="btn el-icon-close"></i>
-        </el-button>
-      </div>
-    </header>
+  <section>
     <div class="main_box">
       <div class="wrapper">
         <div class="wrapper-item">
@@ -45,10 +26,20 @@
         </div>
       </div>
     </div>
-  </div>
+  </section>
 </template>
 <script>
 export default {
+  props: {
+    query: {
+      type: Object,
+      default: {}
+    },
+    isOpen: {
+      type: Boolean,
+      default: false
+    }
+  },
   data() {
     return {
       mainBox: true,
@@ -101,6 +92,12 @@ export default {
     };
   },
   watch: {
+    query: {
+      handler: function(newData, oldData) {
+        var self = this;
+        console.warn("query:", query);
+      }
+    },
     members: {
       handler: function(newData, oldData) {
         var self = this;
@@ -166,8 +163,9 @@ export default {
   mounted: function() {
     // var query = this.$route.query;
     var self = this;
-    var query = JSON.parse(localStorage.query) || "";
-    console.log(query)
+    var query = self.query;
+    var isOpen = self.isOpen;
+    console.log(query);
     if (!query) {
       alert("请先登录!");
     } else if (query.cmd == "create") {
@@ -197,7 +195,7 @@ export default {
     WebRTCRoom.getLoginInfo(
       self.userID,
       function(res) {
-        console.log(res)
+        console.log(res);
         self.userAuthData = res.data;
         self.userID = res.data.userID;
         self.userSig = res.data.userSig;
@@ -580,16 +578,10 @@ export default {
           self.userID,
           self.courseId,
           function(res) {
-            // self.$router.push({
-            //   path: "/room"
-            // });
-            self.$electron.ipcRenderer.send("backRoom", user);
+            self.$bus.emit('logoutFlag',false)
           },
           function(res) {
-            // self.$router.push({
-            //   path: "/room"
-            // });
-            self.$electron.ipcRenderer.send("backRoom", user);
+            self.$bus.emit('logoutFlag',false)
           }
         );
     },
@@ -619,12 +611,6 @@ export default {
         })
         .catch(() => {});
     },
-    minimize() {
-      this.ipcRenderer.send("win-minimize");
-    },
-    fullscreen() {
-      this.ipcRenderer.send("win-fullscreen");
-    },
     close() {
       var self = this;
       self
@@ -643,6 +629,15 @@ export default {
   beforeDestroy() {
     this.stopRenderMemberList();
     clearInterval(this.heartBeatTask);
+  },
+  created(){
+      let self = this
+      self.$bus.on('handleLogout',function(){
+          self.back()
+      })
+      self.$bus.on('handleClose',function(){
+          self.close()
+      })
   }
 };
 </script>

@@ -58,6 +58,7 @@
     "node-sass": "^4.9.0",
     "sass-loader": "^7.0.3",
     "vue": "^2.5.16",
+    "vue-bus": "^1.2.0",
     "vue-electron": "^1.0.6",
     "vue-router": "^2.5.3",
     "vue2-toast": "^2.0.2",
