@@ -1,6 +1,6 @@
 {
   "name": "electron-live-cast",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "author": "nick <283448189@qq.com>",
   "description": "",
   "license": null,
@@ -18,7 +18,7 @@
   },
   "build": {
     "productName": "实时音视频",
-    "appId": "com.example.yourapp",
+    "appId": "org.simulatedgreg.live-cast",
     "directories": {
       "output": "build"
     },
