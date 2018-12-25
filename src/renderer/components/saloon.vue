@@ -13,7 +13,7 @@
         </el-button>
         <!-- <el-button @click="maxmize" class="no-drag" size="mini" type="text">
           <i class="btn el-icon-minus"></i>
-        </el-button> -->
+        </el-button>-->
         <el-button @click="close" class="no-drag hover-color" size="mini" type="text">
           <i class="btn el-icon-close"></i>
         </el-button>
@@ -164,40 +164,40 @@ export default {
     }
   },
   mounted: function() {
-    var query = this.$route.query;
+    // var query = this.$route.query;
     var self = this;
-    self.courseName = query.courseName;
-    console.log("Main.mounted: ", JSON.stringify(query));
+    var query = JSON.parse(localStorage.query) || "";
+    console.log(query)
     if (!query) {
       alert("请先登录!");
     } else if (query.cmd == "create") {
-      this.userID = query.userID;
-      this.selfRole = "教师";
-      this.canDraw = true;
-      this.isRoomCreator = true;
-      this.courseName = query.courseName || "新房间";
-      this.selfName = query.creator;
+      self.userID = query.userID;
+      self.selfRole = "教师";
+      self.canDraw = true;
+      self.isRoomCreator = true;
+      self.courseName = query.courseName || "新房间";
+      self.selfName = query.creator;
     } else if (query.cmd == "enter") {
-      this.userID = query.userID;
-      if (query.roomCreator === this.userID) {
+      self.userID = query.userID;
+      if (query.roomCreator === self.userID) {
         // 相当于老师重新加入房间
-        this.selfRole = "教师";
-        this.canDraw = true;
-        this.isRoomCreator = true;
+        self.selfRole = "教师";
+        self.canDraw = true;
+        self.isRoomCreator = true;
       } else {
-        this.selfRole = "学生";
-        this.canDraw = false;
-        this.isRoomCreator = false;
+        self.selfRole = "学生";
+        self.canDraw = false;
+        self.isRoomCreator = false;
       }
-      this.selfName = query.userName;
-      this.roomID = query.roomID;
+      self.selfName = query.userName;
+      self.roomID = query.roomID;
     } else if (query.cmd != "create" && query.cmd != "enter") {
       alert("发生错误，无法识别身份");
     }
-
     WebRTCRoom.getLoginInfo(
       self.userID,
       function(res) {
+        console.log(res)
         self.userAuthData = res.data;
         self.userID = res.data.userID;
         self.userSig = res.data.userSig;
@@ -212,13 +212,12 @@ export default {
   methods: {
     initRTC: function() {
       var self = this;
-      var query = this.$route.query;
-
+      var query = JSON.parse(localStorage.query) || "";
       trtc_report.send({
         type: "event",
         event: 1206
       });
-      var RTC = (this.RTC = new WebRTCAPI(
+      var RTC = (self.RTC = new WebRTCAPI(
         {
           sdkAppId: self.sdkAppID,
           openid: self.userID,
@@ -581,15 +580,15 @@ export default {
           self.userID,
           self.courseId,
           function(res) {
-            self.$router.push({
-              path: "/room"
-            });
+            // self.$router.push({
+            //   path: "/room"
+            // });
             self.$electron.ipcRenderer.send("backRoom", user);
           },
           function(res) {
-            self.$router.push({
-              path: "/room"
-            });
+            // self.$router.push({
+            //   path: "/room"
+            // });
             self.$electron.ipcRenderer.send("backRoom", user);
           }
         );

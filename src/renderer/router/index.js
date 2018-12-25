@@ -10,18 +10,14 @@ export default new Router({
       component: require('@/components/login').default
     },
     {
-      path: '/room',
-      name: 'room',
-      component: require('@/components/room').default,
-      children: [{
-        path: '/',
-        component: require('@/components/list').default,
-        name: 'list'
-      }, {
-        path: '/saloon',
-        component: require('@/components/saloon').default,
-        name: 'saloon'
-      }, ]
+      path: '/list',
+      name: 'list',
+      component: require('@/components/list').default,
+    },
+    {
+      path: '/saloon',
+      name: 'saloon',
+      component: require('@/components/saloon').default,
     },
     {
       path: '*',

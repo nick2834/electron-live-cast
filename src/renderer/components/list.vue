@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <section>
     <header class="header-view">
       <div class="left flex-c-l"></div>
       <div class="right">
@@ -25,7 +25,7 @@
         </el-table-column>
       </el-table>
     </div>
-  </div>
+  </section>
 </template>
 <script>
 import { getRoomList } from "../api/api";
@@ -54,17 +54,15 @@ export default {
       });
     },
     handleClick(item) {
-      console.log(item);
       var query = {
         cmd: "create",
         creator: item.name,
         courseName: item.addr,
         userID: item.id
       };
-      this.$router.push({
-        name: "saloon",
-        query: query
-      });
+      localStorage.query = JSON.stringify(query)
+      this.$router.push('/saloon');
+      // this.ipcRenderer.send("saloonDetail", query);
     },
     close() {
       var self = this;

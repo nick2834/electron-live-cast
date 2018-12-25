@@ -68,19 +68,7 @@ export default {
           }
         });
       }
-    },
-    checkLogin() {
-      let login = JSON.parse(localStorage.user || "null");
-      if (login) {
-        this.$electron.ipcRenderer.send("status", true);
-      }
     }
-  }, 
-  created() {
-    this.checkLogin();
-  },
-  destroyed(){
-    localStorage.removeItem('user')
   }
 };
 </script>
