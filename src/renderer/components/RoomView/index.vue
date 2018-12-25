@@ -210,7 +210,7 @@ export default {
   methods: {
     initRTC: function() {
       var self = this;
-      var query = JSON.parse(localStorage.query) || "";
+      var query = self.query;
       trtc_report.send({
         type: "event",
         event: 1206
