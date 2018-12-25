@@ -2559,9 +2559,9 @@ const roomURL = process.env.NODE_ENV === 'development' ? `http://localhost:9080/
 
 function createLoginWindow() {
   loginWindow = new __WEBPACK_IMPORTED_MODULE_0_electron__["BrowserWindow"]({
-    height: 500,
+    height: 660,
     useContentSize: true,
-    width: 350,
+    width: 300,
     show: true,
     titleBarStyle: 'hidden',
     resizable: false,

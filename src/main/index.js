@@ -18,9 +18,9 @@ const roomURL = process.env.NODE_ENV === 'development' ?
 
 function createLoginWindow() {
   loginWindow = new BrowserWindow({
-    height: 500,
+    height: 660,
     useContentSize: true,
-    width: 350,
+    width: 300,
     show: true,
     titleBarStyle: 'hidden',
     resizable: false,

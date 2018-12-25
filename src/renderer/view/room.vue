@@ -1,6 +1,6 @@
 <template>
   <div class="room_box shadow">
-    <header-view :isOpen="isOpen"></header-view>
+    <header-view :isOpen="isOpen" :USERNAME="username" :courseName="courseName"></header-view>
     <section v-if="!isOpen">
       <div class="roomList">
         <el-table :data="roomList" border style="width: 100%" max-height="550" v-loading="loading">
@@ -31,7 +31,9 @@ export default {
       loading: true,
       ipcRenderer: this.$electron.ipcRenderer,
       query: {},
-      isOpen: false
+      isOpen: false,
+      username: "",
+      courseName: ""
     };
   },
   components: {
@@ -69,6 +71,7 @@ export default {
     _this.$electron.ipcRenderer.on("user-access", (event, data) => {
       sessionStorage.user = JSON.stringify(data);
       _this.userInfo = data;
+      _this.username = data.name;
       var account = _this.userInfo.username;
       _this.getRoomList(account);
     });

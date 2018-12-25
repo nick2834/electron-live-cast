@@ -1,10 +1,12 @@
 <template>
   <div class="header-view">
     <div class="left flex-c-l">
+      <div class="user_box" v-if="USERNAME != ''">欢迎您：{{USERNAME}}</div>
       <el-button class="no-drag" size="mini" type="text" v-if="isOpen" @click="handleLogout">
         <i class="btn el-icon-arrow-left"></i>
       </el-button>
     </div>
+    <div class="center" v-if="courseName != ''">{{courseName}}</div>
     <div class="right">
       <el-button class="no-drag" size="mini" type="text" @click="minimize">
         <i class="btn el-icon-minus"></i>
@@ -23,6 +25,14 @@ export default {
     isOpen: {
       type: Boolean,
       default: false
+    },
+    USERNAME:{
+      type: String,
+      default: ""
+    },
+    courseName:{
+      type:String,
+      default:""
     }
   },
   data() {
@@ -54,33 +64,28 @@ export default {
   box-sizing: border-box;
   -webkit-app-region: drag;
   height: 50px;
+  background: url('../../assets/images/bg.png');
+  background-position: center;
   /deep/ .left {
+    .user_box{
+      color: #fff
+    }
     .btn {
       font-size: 17px;
-      color: #999;
+      color: #fff;
     }
     .btn:hover {
       color: #31c27c;
     }
-    .el-icon-refresh {
-      color: #333;
-    }
-    .search {
-      margin-left: 15px;
-      width: 200px;
-      .el-input__inner {
-        border: none;
-        border-radius: 30px;
-        background: #e9e9e9;
-        color: #8c8c8c;
-      }
-    }
+  }
+  .center{
+    color: #fff;
   }
   .right {
     height: inherit;
     .btn {
       font-size: 17px;
-      color: #333;
+      color: #fff;
     }
     .el-button {
       height: 100%;

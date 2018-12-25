@@ -1,31 +1,24 @@
 <template>
   <section style="-webkit-app-region: drag" class="login shadow">
-    <div class="form">
-      <form>
-        <h2 class="title">登录</h2>
-        <div class="form-group">
-          <!-- <label for="AccessKey">AccessKey</label> -->
-          <input
-            type="text"
-            class="form-control"
-            id="account"
-            v-model="loginForm.account"
-            placeholder="account"
-          >
-        </div>
-        <div class="form-group">
-          <!-- <label for="SecretKey">SecretKey</label> -->
-          <input
-            type="password"
-            class="form-control"
-            id="password"
-            v-model="loginForm.password"
-            placeholder="password"
-          >
-        </div>
-        <el-button type="primary" @click.prevent="handleRoomList" size="small" class="btn">确定</el-button>
-      </form>
-    </div>
+    <el-form>
+      <h2 class="title">登录</h2>
+      <div class="form-group">
+        <el-input
+          placeholder="请输入账号"
+          prefix-icon="courtfont icon-user-create"
+          v-model="loginForm.account"
+        ></el-input>
+      </div>
+      <div class="form-group">
+        <el-input
+          placeholder="请输入账号密码"
+          prefix-icon="courtfont icon-zhucedenglumima"
+          v-model="loginForm.password"
+          type="password"
+        ></el-input>
+      </div>
+      <el-button type="primary" @click.prevent="handleRoomList" size="small" class="btn">确定</el-button>
+    </el-form>
   </section>
 </template>
 
@@ -47,7 +40,7 @@ export default {
   },
   methods: {
     handleRoomList() {
-      var _this = this
+      var _this = this;
       if (_this.loginForm.account === "" || _this.loginForm.password === "") {
         _this.$message.error("账号密码不能为空");
       } else {
@@ -73,42 +66,36 @@ export default {
 };
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .login {
-  background: #409eff;
+  /* background: #409eff; */
+  background: url("../assets/images/bg.png");
   width: 100%;
   height: 100%;
+  background-position: center;
 }
-.form form {
-  width: 300px;
+form {
+  width: 260px;
   margin: 0 auto;
-  background: #fff;
+  // background: #fff;
   top: 50%;
   left: 50%;
   position: absolute;
   transform: translate(-50%, -50%);
-  box-shadow: 0 1px 5px 0px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 1px 5px 0px rgba(255, 255, 255, .5);
   border-radius: 4px;
-  padding: 30px;
-}
-
-.form form .title {
-  text-align: center;
-  font-size: 18px;
-  line-height: 26px;
-  margin-bottom: 15px;
-  color: #409eff;
+  padding: 20px;
+  .title {
+    text-align: center;
+    font-size: 18px;
+    line-height: 26px;
+    margin-bottom: 15px;
+    color: #409eff;
+  }
 }
 
 .form-group {
   margin-bottom: 15px;
-}
-
-label {
-  display: inline-block;
-  max-width: 100%;
-  margin-bottom: 5px;
-  font-weight: 700;
 }
 
 .form-control {
