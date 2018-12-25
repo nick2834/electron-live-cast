@@ -2,7 +2,7 @@
   <div class="header-view">
     <div class="left flex-c-l">
       <div class="user_box" v-if="USERNAME != ''">欢迎您：{{USERNAME}}</div>
-      <el-button class="no-drag" size="mini" type="text" v-if="isOpen" @click="handleLogout">
+      <el-button class="no-drag" size="mini" type="text" v-if="!isOpen" @click="handleLogout">
         <i class="btn el-icon-arrow-left"></i>
       </el-button>
     </div>
@@ -24,7 +24,7 @@ export default {
   props: {
     isOpen: {
       type: Boolean,
-      default: false
+      default: true
     },
     USERNAME:{
       type: String,
@@ -37,12 +37,12 @@ export default {
   },
   data() {
     return {
-      isNotLogin: false
+      
     };
   },
   methods: {
     handleLogout() {
-      this.$bus.emit('handleLogout')
+      this.$bus.emit('handleLogout',true)
     },
     minimize() {
       this.$electron.ipcRenderer.send("win-minimize");

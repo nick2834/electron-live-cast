@@ -553,10 +553,10 @@ export default {
           self.userID,
           self.courseId,
           function(res) {
-            self.$bus.emit('logoutFlag',false)
+            self.$bus.emit('logoutFlag',true)
           },
           function(res) {
-            self.$bus.emit('logoutFlag',false)
+            self.$bus.emit('logoutFlag',true)
           }
         );
     },

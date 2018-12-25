@@ -1,29 +1,20 @@
 <template>
   <div class="room_box shadow">
-    <header-view :isOpen="isOpen" :USERNAME="username" :courseName="courseName"></header-view>
-    <section v-if="!isOpen">
-      <div class="roomList">
-        <el-table :data="roomList" border style="width: 100%" max-height="550" v-loading="loading">
-          <el-table-column fixed prop="id" label="ID" width="180"></el-table-column>
-          <el-table-column prop="name" label="姓名" width="120"></el-table-column>
-          <el-table-column prop="birth" label="生日" width="120"></el-table-column>
-          <el-table-column prop="addr" label="省份"></el-table-column>
-          <el-table-column fixed="right" label="操作" width="150">
-            <template slot-scope="scope">
-              <el-button @click="handleClick(scope.row)" type="text" size="small">进入房间</el-button>
-              <el-button type="text" size="small">编辑</el-button>
-            </template>
-          </el-table-column>
-        </el-table>
-      </div>
-    </section>
-    <room-view v-else :query="query" ref="roomview" :isOpen="isOpen"></room-view>
+    <template v-if="isOpen">
+      <header-view :isOpen="isOpen" :USERNAME="username"></header-view>
+      <list-view :roomList="roomList" ref="listView" :loading="loading"></list-view>
+    </template>
+    <template v-else>
+      <header-view :isOpen="isOpen" :courseName="courseName"></header-view>
+      <room-view :query="query" ref="roomview" :isOpen="isOpen"></room-view>
+    </template>
   </div>
 </template>
 <script>
 import { getRoomList } from "../api/api";
-import roomView from "../components/RoomView";
 import headerView from "../components/Header";
+import listView from "../components/ListView";
+import roomView from "../components/RoomView";
 export default {
   data() {
     return {
@@ -31,14 +22,15 @@ export default {
       loading: true,
       ipcRenderer: this.$electron.ipcRenderer,
       query: {},
-      isOpen: false,
+      isOpen: true,
       username: "",
       courseName: ""
     };
   },
   components: {
-    roomView,
-    headerView
+    headerView,
+    listView,
+    roomView
   },
   methods: {
     getRoomList(account) {
@@ -55,44 +47,53 @@ export default {
           self.loading = false;
         }
       });
-    },
-    handleClick(item) {
-      this.query = {
-        cmd: "create",
-        creator: item.name,
-        courseName: item.addr,
-        userID: item.id
-      };
-      this.isOpen = !this.isOpen;
     }
   },
   mounted() {
     var _this = this;
-    _this.$electron.ipcRenderer.on("user-access", (event, data) => {
-      sessionStorage.user = JSON.stringify(data);
-      _this.userInfo = data;
-      _this.username = data.name;
-      var account = _this.userInfo.username;
+    var user = JSON.parse(sessionStorage.user) || "null";
+    if (user) {
+      _this.username = user.name;
+      var account = user.username;
       _this.getRoomList(account);
-    });
+    } else {
+      _this.$electron.ipcRenderer.on("user-access", (event, data) => {
+        sessionStorage.user = JSON.stringify(data);
+        _this.userInfo = data;
+        _this.username = data.name;
+        var account = _this.userInfo.username;
+        _this.getRoomList(account);
+      });
+    }
   },
   created() {
-    let self = this;
-    self.$bus.on("logoutFlag", function(data) {
-      self.isOpen = data;
+    let _this = this;
+    _this.$bus.on("logoutFlag", function(data) {
+      _this.isOpen = data;
     });
-    self.$bus.on("handleClose", function() {
+    _this.$bus.on("handleClose", function() {
       if (!self.isOpen) {
-        this.$confirm("此操作将退出软件, 是否继续?", "提示", {
-          confirmButtonText: "确定",
-          cancelButtonText: "取消",
-          type: "warning"
-        })
+        _this
+          .$confirm("此操作将退出软件, 是否继续?", "提示", {
+            confirmButtonText: "确定",
+            cancelButtonText: "取消",
+            type: "warning"
+          })
           .then(() => {
-            this.$electron.ipcRenderer.send("win-close");
+            _this.$electron.ipcRenderer.send("win-close");
           })
           .catch(() => {});
       }
+    });
+    _this.$bus.on("handleClick", function(data) {
+      _this.query = {
+        cmd: "create",
+        creator: data.name,
+        courseName: data.addr,
+        userID: data.id
+      };
+      _this.isOpen = false;
+      _this.courseName = data.addr;
     });
   }
 };
