@@ -1,5 +1,5 @@
 <template>
-  <div class="room_box">
+  <div class="room_box shadow">
     <header-view :isOpen="isOpen"></header-view>
     <section v-if="!isOpen">
       <div class="roomList">

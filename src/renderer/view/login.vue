@@ -1,5 +1,5 @@
 <template>
-  <section style="-webkit-app-region: drag" class="login">
+  <section style="-webkit-app-region: drag" class="login shadow">
     <div class="form">
       <form>
         <h2 class="title">登录</h2>

@@ -240,49 +240,10 @@ body {
   line-height: 1.42857143;
   color: #333;
 }
-.header-view {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 10px;
-  box-sizing: border-box;
-  -webkit-app-region: drag;
-  height: 50px;
-  /deep/ .left {
-    .btn {
-      font-size: 17px;
-      color: #999;
-    }
-    .btn:hover {
-      color: #31c27c;
-    }
-    .el-icon-refresh {
-      color: #333;
-    }
-    .search {
-      margin-left: 15px;
-      width: 200px;
-      .el-input__inner {
-        border: none;
-        border-radius: 30px;
-        background: #e9e9e9;
-        color: #8c8c8c;
-      }
-    }
-  }
-  .right {
-    height: inherit;
-    .btn {
-      font-size: 17px;
-      color: #333;
-    }
-    .el-button {
-      height: 100%;
-      // padding: 0 10px;
-    }
-    .btn:hover {
-      color: #31c27c;
-    }
-  }
+.shadow {
+  box-shadow: 0 0 10px rgba(0, 0, 0, 1);
+  width: 100%;
+  height: 100%;
+  border-radius: 4px;
 }
 </style>
