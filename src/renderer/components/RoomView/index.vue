@@ -59,15 +59,7 @@ export default {
       member_list: [],
       requestMembers: [],
       refleshTask: null,
-      requestingPushers: [
-        {
-          id: "1",
-          name: "jacqiu"
-        }
-      ],
-      pusherVideosDisplay: [false, false, false, false, false, false],
       pushers: {},
-      msgs: [], // chat list
       nameMap: {
         "@TIM#SYSTEM": ""
       }, // userId : nickName
@@ -76,28 +68,14 @@ export default {
       recentMembers: [],
       mode: "camera",
       memberUpdateTimer: null,
-      imOptions: {
-        sendMsg: function() {
-          return "sendMsgFunction";
-        }
-      },
-      canDraw: false,
       getMemberListSto: null,
-      userAuthData: {
-        // 用户鉴权信息
-      },
+      userAuthData: {},
       heartBeatTask: null, // 心跳任务定时器
       courseName: "",
       ipcRenderer: this.$electron.ipcRenderer
     };
   },
   watch: {
-    query: {
-      handler: function(newData, oldData) {
-        var self = this;
-        console.warn("query:", query);
-      }
-    },
     members: {
       handler: function(newData, oldData) {
         var self = this;
@@ -171,7 +149,6 @@ export default {
     } else if (query.cmd == "create") {
       self.userID = query.userID;
       self.selfRole = "教师";
-      self.canDraw = true;
       self.isRoomCreator = true;
       self.courseName = query.courseName || "新房间";
       self.selfName = query.creator;
@@ -180,11 +157,9 @@ export default {
       if (query.roomCreator === self.userID) {
         // 相当于老师重新加入房间
         self.selfRole = "教师";
-        self.canDraw = true;
         self.isRoomCreator = true;
       } else {
         self.selfRole = "学生";
-        self.canDraw = false;
         self.isRoomCreator = false;
       }
       self.selfName = query.userName;

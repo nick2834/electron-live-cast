@@ -28,7 +28,7 @@ function createLoginWindow() {
       webSecurity: false
     }
   })
-
+  loginWindow.webContents.openDevTools();
   loginWindow.loadURL(loginRL)
 
   loginWindow.on('closed', () => {
@@ -55,6 +55,7 @@ function createRoomWindow() {
       webSecurity: false
     }
   })
+  roomWindow.webContents.openDevTools();
   roomWindow.loadURL(roomURL)
 
   roomWindow.on('closed', () => {
