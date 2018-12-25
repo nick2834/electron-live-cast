@@ -51,11 +51,21 @@ export default {
   },
   mounted() {
     var _this = this;
-    var user = JSON.parse(sessionStorage.user) || "null";
-    if (user) {
-      _this.username = user.name;
-      var account = user.username;
-      _this.getRoomList(account);
+    if (sessionStorage.user) {
+      var user = JSON.parse(sessionStorage.user) || "null";
+      if (user) {
+        _this.username = user.name;
+        var account = user.username;
+        _this.getRoomList(account);
+      } else {
+        _this.$electron.ipcRenderer.on("user-access", (event, data) => {
+          sessionStorage.user = JSON.stringify(data);
+          _this.userInfo = data;
+          _this.username = data.name;
+          var account = _this.userInfo.username;
+          _this.getRoomList(account);
+        });
+      }
     } else {
       _this.$electron.ipcRenderer.on("user-access", (event, data) => {
         sessionStorage.user = JSON.stringify(data);

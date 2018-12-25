@@ -56,44 +56,5 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.header-view {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 10px;
-  box-sizing: border-box;
-  -webkit-app-region: drag;
-  height: 50px;
-  background: url('../../assets/images/bg.png');
-  background-position: center;
-  /deep/ .left {
-    .user_box{
-      color: #fff
-    }
-    .btn {
-      font-size: 17px;
-      color: #fff;
-    }
-    .btn:hover {
-      color: #31c27c;
-    }
-  }
-  .center{
-    color: #fff;
-  }
-  .right {
-    height: inherit;
-    .btn {
-      font-size: 17px;
-      color: #fff;
-    }
-    .el-button {
-      height: 100%;
-      // padding: 0 10px;
-    }
-    .btn:hover {
-      color: #31c27c;
-    }
-  }
-}
+
 </style>

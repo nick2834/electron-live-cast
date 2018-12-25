@@ -240,6 +240,46 @@ body {
   line-height: 1.42857143;
   color: #333;
 }
+.header-view {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 10px;
+  box-sizing: border-box;
+  -webkit-app-region: drag;
+  height: 50px;
+  background: url('./assets/images/bg.png');
+  background-position: center;
+  /deep/ .left {
+    .user_box{
+      color: #fff
+    }
+    .btn {
+      font-size: 17px;
+      color: #fff;
+    }
+    .btn:hover {
+      color: #31c27c;
+    }
+  }
+  .center{
+    color: #fff;
+  }
+  .right {
+    height: inherit;
+    .btn {
+      font-size: 17px;
+      color: #fff;
+    }
+    .el-button {
+      height: 100%;
+      // padding: 0 10px;
+    }
+    .btn:hover {
+      color: #31c27c;
+    }
+  }
+}
 .shadow {
   box-shadow: 0 0 10px rgba(0, 0, 0, 1);
   width: 100%;

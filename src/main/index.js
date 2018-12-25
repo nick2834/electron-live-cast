@@ -21,9 +21,15 @@ function createLoginWindow() {
     height: 660,
     useContentSize: true,
     width: 300,
-    show: true,
-    titleBarStyle: 'hidden',
+    frame: false,
     resizable: false,
+    skipTaskbar: false,
+    transparent: true,
+    title: "实时音视频",
+    autoHideMenuBar: true,
+    show: true,
+    hasShadow: true,
+    center: true,
     webPreferences: {
       webSecurity: false
     }
@@ -48,7 +54,6 @@ function createRoomWindow() {
     title: "实时音视频",
     autoHideMenuBar: true,
     show: false,
-    // alwaysOnTop: true,
     hasShadow: true,
     center: true,
     webPreferences: {
@@ -87,7 +92,9 @@ ipcMain.on('roomList', (evt, data) => {
   roomWindow.show()
   roomWindow.webContents.send('user-access', data)
 });
-
+ipcMain.on('login-minimize', () => {
+  loginWindow.minimize()
+})
 ipcMain.on('win-minimize', () => {
   roomWindow.minimize()
 })

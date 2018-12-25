@@ -1,5 +1,18 @@
 <template>
   <section style="-webkit-app-region: drag" class="login shadow">
+    <header class="header-view">
+      <div class="left flex-c-l">
+        
+      </div>
+      <div class="right">
+        <el-button class="no-drag" size="mini" type="text" @click="minimize">
+          <i class="btn el-icon-minus"></i>
+        </el-button>
+        <el-button class="no-drag hover-color" size="mini" type="text" @click="close">
+          <i class="btn el-icon-close"></i>
+        </el-button>
+      </div>
+    </header>
     <el-form>
       <h2 class="title">登录</h2>
       <div class="form-group">
@@ -61,6 +74,12 @@ export default {
           }
         });
       }
+    },
+    minimize(){
+      this.$electron.ipcRenderer.send("login-minimize");
+    },
+    close(){
+      this.$electron.ipcRenderer.send("win-close");
     }
   }
 };
@@ -73,6 +92,9 @@ export default {
   width: 100%;
   height: 100%;
   background-position: center;
+  header {
+    background: transparent
+  }
 }
 form {
   width: 260px;
@@ -82,7 +104,7 @@ form {
   left: 50%;
   position: absolute;
   transform: translate(-50%, -50%);
-  box-shadow: 0 1px 5px 0px rgba(255, 255, 255, .5);
+  box-shadow: 0 1px 5px 0px rgba(255, 255, 255, 0.5);
   border-radius: 4px;
   padding: 20px;
   .title {
@@ -90,7 +112,7 @@ form {
     font-size: 18px;
     line-height: 26px;
     margin-bottom: 15px;
-    color: #409eff;
+    color: #ffffff;
   }
 }
 
