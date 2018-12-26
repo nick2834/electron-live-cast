@@ -1,6 +1,6 @@
 <template>
-  <section style="-webkit-app-region: drag" class="login shadow">
-    <header class="header-view">
+  <section class="login shadow">
+    <header class="header-view" style="-webkit-app-region: drag">
       <div class="left flex-c-l">
         
       </div>
