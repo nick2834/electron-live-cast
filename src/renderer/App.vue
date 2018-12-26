@@ -250,6 +250,7 @@ body {
   height: 50px;
   background: url('./assets/images/bg.png');
   background-position: center;
+   -webkit-app-region: drag;
   /deep/ .left {
     .user_box{
       color: #fff
