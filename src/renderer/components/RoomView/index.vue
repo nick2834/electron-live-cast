@@ -2,7 +2,8 @@
   <section>
     <div class="main_box">
       <div class="wrapper">
-        <div class="wrapper-item">
+        <!-- 一个人 -->
+        <div class="wrapper-item" :style="{width:members.length == 0 ?'100%':'50%',height:members.length == 0 ?'100%':'50%'}" :class="{'isTwoPerson':members.length == 1,'isThreePerson':members.length == 2}">
           <video
             id="localVideo"
             style=" margin: 0 auto; width: 100%; height: 100%;"
@@ -11,19 +12,39 @@
             playinline
           ></video>
         </div>
-        <template v-if="members.length <= 0">
-          <div class="wrapper-item"></div>
-          <div class="wrapper-item"></div>
-          <div class="wrapper-item"></div>
+        <!-- 加主播两个人 -->
+        <template v-if="members.length == 1">
+          <div class="wrapper-item" v-for="(item, index) in members" :key="index" style="height:100%">
+            <video
+              :id="'v_'+(item.id)"
+              style=" margin: 0 auto; width: 100%; height: 100%;"
+              autoplay
+              playsinline
+            ></video>
+          </div>
         </template>
-        <div class="wrapper-item" v-for="(item, index) in members" :key="index">
-          <video
-            :id="'v_'+(item.id)"
-            style=" margin: 0 auto; width: 100%; height: 100%;"
-            autoplay
-            playsinline
-          ></video>
-        </div>
+         <!-- 加主播三个人 -->
+        <template v-if="members.length == 2">
+          <div class="wrapper-item" v-for="(item, index) in members" :key="index">
+            <video
+              :id="'v_'+(item.id)"
+              style=" margin: 0 auto; width: 100%; height: 100%;"
+              autoplay
+              playsinline
+            ></video>
+          </div>
+        </template>
+         <!-- 加主播4四个人 -->
+        <template v-if="members.length == 3">
+          <div class="wrapper-item" v-for="(item, index) in members" :key="index">
+            <video
+              :id="'v_'+(item.id)"
+              style=" margin: 0 auto; width: 100%; height: 100%;"
+              autoplay
+              playsinline
+            ></video>
+          </div>
+        </template>
       </div>
     </div>
   </section>
@@ -553,10 +574,10 @@ export default {
           self.userID,
           self.courseId,
           function(res) {
-            self.$bus.emit('logoutFlag',true)
+            self.$bus.emit("logoutFlag", true);
           },
           function(res) {
-            self.$bus.emit('logoutFlag',true)
+            self.$bus.emit("logoutFlag", true);
           }
         );
     },
@@ -605,14 +626,14 @@ export default {
     this.stopRenderMemberList();
     clearInterval(this.heartBeatTask);
   },
-  created(){
-      let self = this
-      self.$bus.on('handleLogout',function(){
-          self.back()
-      })
-      self.$bus.on('handleClose',function(){
-          self.close()
-      })
+  created() {
+    let self = this;
+    self.$bus.on("handleLogout", function() {
+      self.back();
+    });
+    self.$bus.on("handleClose", function() {
+      self.close();
+    });
   }
 };
 </script>
@@ -645,6 +666,13 @@ export default {
     border: 1px solid #f3f3f3;
     position: relative;
     background: #000;
+    &.isTwoPerson{
+      height: 100% !important;
+    }
+    &.isThreePerson{
+      height: 50% !important;
+      width: 100% !important;
+    }
     span {
       position: absolute;
       bottom: 10px;
