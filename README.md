@@ -1,5 +1,6 @@
 # electron-live-cast
 利用腾讯WEBRTC结合electron制作的实时音视频
+Windows Mac Linux多端通用，可修改制作自己的实时音视频软件
 
 ##### 运行
 
